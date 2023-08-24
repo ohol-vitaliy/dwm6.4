@@ -47,8 +47,10 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "st"          , NULL , NULL , 1      , 0 , -1 } ,
+	{ "Firefox-esr" , NULL , NULL , 1 << 1 , 0 , -1 } ,
+	{ "easyeda"     , NULL , NULL , 1 << 2 , 0 , -1 } ,
+	{ "thunar"      , NULL , NULL , 1 << 4 , 0 , -1 } ,
 };
 
 /* layout(s) */
@@ -62,8 +64,8 @@ static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen win
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "[M]",      monocle }, /* first entry is default */
-	{ "[t]",      tile },
+	{ "[t]",      tile }, /* first entry is default */
+	{ "[M]",      monocle }, 
 	{ "[f]",      NULL },    /* no layout function means floating behavior */
 	{ "H[]",      deck },
 	/* { "[@]",      spiral }, */
@@ -97,11 +99,7 @@ static const char *termcmd[]  = { "st", NULL };
 static const char *languscmd[]  = { "setxkbmap", "us", NULL };
 static const char *languacmd[]  = { "setxkbmap", "ua", NULL };
 static const char *langrucmd[]  = { "setxkbmap", "ru", NULL };
-static const char *brightnessup[]  = { "brightnessctl", "set", "5%+", NULL };
-static const char *brightnessdown[]  = { "brightnessctl", "set", "5%-", NULL };
-static const char *volumeup[]  = { "pulsemixer", "--change-volume", "+1", NULL };
-static const char *volumedown[]  = { "pulsemixer", "--change-volume", "-1", NULL };
-static const char *volumemute[]  = { "pulsemixer", "--toggle-mute", NULL };
+
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -110,11 +108,11 @@ static const Key keys[] = {
 	{ ControlMask,                  XK_1,      spawn,          {.v = languscmd } },
 	{ ControlMask,                  XK_2,      spawn,          {.v = languacmd } },
 	{ ControlMask,                  XK_3,      spawn,          {.v = langrucmd } },
-	{ 0,             XF86XK_MonBrightnessUp,   spawn,          {.v = brightnessup} },
-	{ 0,             XF86XK_MonBrightnessDown, spawn,          {.v = brightnessdown} },
-	{ 0,             XF86XK_AudioMute,         spawn,          {.v = volumemute} },
-	{ 0,             XF86XK_AudioRaiseVolume,  spawn,          {.v = volumeup} },
-	{ 0,             XF86XK_AudioLowerVolume,  spawn,          {.v = volumedown} },
+	{ 0,             XF86XK_MonBrightnessUp,   spawn,          SHCMD("brightnessctl set 5%+ && bash /home/zeroring/.config/scripts/bright | dzen2 -p 1") },
+	{ 0,             XF86XK_MonBrightnessDown, spawn,          SHCMD("brightnessctl set 5%- && bash /home/zeroring/.config/scripts/bright | dzen2 -p 1") },
+	{ 0,             XF86XK_AudioMute,         spawn,          SHCMD("pulsemixer --toggle-mute && bash /home/zeroring/.config/scripts/volume | dzen2 -p 1") },
+	{ 0,             XF86XK_AudioRaiseVolume,  spawn,          SHCMD("pulsemixer --change-volume +2 && bash /home/zeroring/.config/scripts/volume | dzen2 -p 1") },
+	{ 0,             XF86XK_AudioLowerVolume,  spawn,          SHCMD("pulsemixer --change-volume -2 && bash /home/zeroring/.config/scripts/volume | dzen2 -p 1") },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY|ShiftMask,             XK_b,      toggleextrabar, {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
@@ -128,8 +126,8 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[2]} },
 	/* { MODKEY,                       XK_space,  setlayout,      {0} }, */
 	{ MODKEY,                       XK_space,  togglefloating, {0} },

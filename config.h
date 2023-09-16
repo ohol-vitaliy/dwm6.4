@@ -96,23 +96,33 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
 static const char *termcmd[]  = { "st", NULL };
-static const char *languscmd[]  = { "setxkbmap", "us", NULL };
-static const char *languacmd[]  = { "setxkbmap", "ua", NULL };
-static const char *langrucmd[]  = { "setxkbmap", "ru", NULL };
+static const char *bluemancmd[]  = { "blueman-manager", NULL };
+static const char *browsercmd[]  = { "firefox", NULL };
+static const char lang_us[] = "setxkbmap us";
+static const char lang_ua[] = "setxkbmap ua";
+static const char lang_ru[] = "setxkbmap ru";
+static const char bright_up[] = "brightnessctl set 5%+ && bash /home/zeroring/.config/scripts/bright | dzen2 -p 1";
+static const char bright_down[] = "brightnessctl set 5%- && bash /home/zeroring/.config/scripts/bright | dzen2 -p 1";
+static const char vol_mute[] = "pulsemixer --toggle-mute && bash /home/zeroring/.config/scripts/volume | dzen2 -p 1";
+static const char vol_up[] = "pulsemixer --change-volume +2 && bash /home/zeroring/.config/scripts/volume | dzen2 -p 1";
+static const char vol_down[] = "pulsemixer --change-volume -2 && bash /home/zeroring/.config/scripts/volume | dzen2 -p 1";
 
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
+	{ Mod4Mask,                     XK_b,      spawn,          {.v = bluemancmd } },
+	{ Mod4Mask,                     XK_f,      spawn,          {.v = browsercmd } },
+	{ Mod4Mask,                     XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_w,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_e,      spawn,          {.v = dmenucmd } },
-	{ ControlMask,                  XK_1,      spawn,          {.v = languscmd } },
-	{ ControlMask,                  XK_2,      spawn,          {.v = languacmd } },
-	{ ControlMask,                  XK_3,      spawn,          {.v = langrucmd } },
-	{ 0,             XF86XK_MonBrightnessUp,   spawn,          SHCMD("brightnessctl set 5%+ && bash /home/zeroring/.config/scripts/bright | dzen2 -p 1") },
-	{ 0,             XF86XK_MonBrightnessDown, spawn,          SHCMD("brightnessctl set 5%- && bash /home/zeroring/.config/scripts/bright | dzen2 -p 1") },
-	{ 0,             XF86XK_AudioMute,         spawn,          SHCMD("pulsemixer --toggle-mute && bash /home/zeroring/.config/scripts/volume | dzen2 -p 1") },
-	{ 0,             XF86XK_AudioRaiseVolume,  spawn,          SHCMD("pulsemixer --change-volume +2 && bash /home/zeroring/.config/scripts/volume | dzen2 -p 1") },
-	{ 0,             XF86XK_AudioLowerVolume,  spawn,          SHCMD("pulsemixer --change-volume -2 && bash /home/zeroring/.config/scripts/volume | dzen2 -p 1") },
+	{ ControlMask,                  XK_1,      spawn,          SHCMD(lang_us) },
+	{ ControlMask,                  XK_2,      spawn,          SHCMD(lang_ua) },
+	{ ControlMask,                  XK_3,      spawn,          SHCMD(lang_ru) },
+	{ 0,             XF86XK_MonBrightnessUp,   spawn,          SHCMD(bright_up) },
+	{ 0,             XF86XK_MonBrightnessDown, spawn,          SHCMD(bright_down) },
+	{ 0,             XF86XK_AudioMute,         spawn,          SHCMD(vol_mute) },
+	{ 0,             XF86XK_AudioRaiseVolume,  spawn,          SHCMD(vol_up) },
+	{ 0,             XF86XK_AudioLowerVolume,  spawn,          SHCMD(vol_down) },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY|ShiftMask,             XK_b,      toggleextrabar, {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
@@ -122,7 +132,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
-	{ MODKEY|Mod4Mask,              XK_0,      togglegaps,     {0} },
+	{ MODKEY,                       XK_g,      togglegaps,     {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },

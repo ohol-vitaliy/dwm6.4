@@ -8,7 +8,7 @@ static const unsigned int gappih    = 20;       /* horiz inner gap between windo
 static const unsigned int gappiv    = 10;       /* vert inner gap between windows */
 static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
 static const unsigned int gappov    = 20;       /* vert outer gap between windows and screen edge */
-static       int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
+static       int smartgaps          = 1;        /* 1 means no outer gap when there is only one window */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means standard bar at bottom */
 static const int extrabar           = 1;        /* 0 means no extra bar */
@@ -95,34 +95,34 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
-static const char *termcmd[]  = { "st", NULL };
-static const char *bluemancmd[]  = { "blueman-manager", NULL };
-static const char *browsercmd[]  = { "firefox", NULL };
-static const char lang_us[] = "setxkbmap us";
-static const char lang_ua[] = "setxkbmap ua";
-static const char lang_ru[] = "setxkbmap ru";
-static const char bright_up[] = "brightnessctl set 5%+ && bash /home/zeroring/.config/scripts/bright | dzen2 -p 1";
-static const char bright_down[] = "brightnessctl set 5%- && bash /home/zeroring/.config/scripts/bright | dzen2 -p 1";
-static const char vol_mute[] = "pulsemixer --toggle-mute && bash /home/zeroring/.config/scripts/volume | dzen2 -p 1";
-static const char vol_up[] = "pulsemixer --change-volume +2 && bash /home/zeroring/.config/scripts/volume | dzen2 -p 1";
-static const char vol_down[] = "pulsemixer --change-volume -2 && bash /home/zeroring/.config/scripts/volume | dzen2 -p 1";
+static const char term_cmd[]  = "st";
+static const char blueman_cmd[]  = "blueman-manager";
+static const char browser_cmd[] = "firefox";
+static const char lang_us_cmd[] = "setxkbmap us && echo 'lang: us' | dzen2 -p 1";
+static const char lang_ua_cmd[] = "setxkbmap ua && echo 'lang: ua' | dzen2 -p 1";
+static const char lang_ru_cmd[] = "setxkbmap ru && echo 'lang: ru' | dzen2 -p 1";
+static const char bright_up_cmd[] = "brightnessctl set 5%+ && bash /home/zeroring/.config/scripts/bright | dzen2 -p 1";
+static const char bright_down_cmd[] = "brightnessctl set 5%- && bash /home/zeroring/.config/scripts/bright | dzen2 -p 1";
+static const char vol_mute_cmd[] = "pulsemixer --toggle-mute && bash /home/zeroring/.config/scripts/volume | dzen2 -p 1";
+static const char vol_up_cmd[] = "pulsemixer --change-volume +2 && bash /home/zeroring/.config/scripts/volume | dzen2 -p 1";
+static const char vol_down_cmd[] = "pulsemixer --change-volume -2 && bash /home/zeroring/.config/scripts/volume | dzen2 -p 1";
 
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ Mod4Mask,                     XK_b,      spawn,          {.v = bluemancmd } },
-	{ Mod4Mask,                     XK_f,      spawn,          {.v = browsercmd } },
-	{ Mod4Mask,                     XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_w,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,                       XK_e,      spawn,          {.v = dmenucmd } },
-	{ ControlMask,                  XK_1,      spawn,          SHCMD(lang_us) },
-	{ ControlMask,                  XK_2,      spawn,          SHCMD(lang_ua) },
-	{ ControlMask,                  XK_3,      spawn,          SHCMD(lang_ru) },
-	{ 0,             XF86XK_MonBrightnessUp,   spawn,          SHCMD(bright_up) },
-	{ 0,             XF86XK_MonBrightnessDown, spawn,          SHCMD(bright_down) },
-	{ 0,             XF86XK_AudioMute,         spawn,          SHCMD(vol_mute) },
-	{ 0,             XF86XK_AudioRaiseVolume,  spawn,          SHCMD(vol_up) },
-	{ 0,             XF86XK_AudioLowerVolume,  spawn,          SHCMD(vol_down) },
+	{ Mod4Mask,                     XK_b,      spawn,          SHCMD(blueman_cmd) },
+	{ Mod4Mask,                     XK_f,      spawn,          SHCMD(browser_cmd) },
+	{ Mod4Mask,                     XK_Return, spawn,          SHCMD(term_cmd) },
+	{ MODKEY,                       XK_w,      spawn,          { .v = dmenucmd } },
+	{ MODKEY,                       XK_e,      spawn,          { .v = dmenucmd } },
+	{ ControlMask,                  XK_1,      spawn,          SHCMD(lang_us_cmd) },
+	{ ControlMask,                  XK_2,      spawn,          SHCMD(lang_ua_cmd) },
+	{ ControlMask,                  XK_3,      spawn,          SHCMD(lang_ru_cmd) },
+	{ 0,             XF86XK_MonBrightnessUp,   spawn,          SHCMD(bright_up_cmd) },
+	{ 0,             XF86XK_MonBrightnessDown, spawn,          SHCMD(bright_down_cmd) },
+	{ 0,             XF86XK_AudioMute,         spawn,          SHCMD(vol_mute_cmd) },
+	{ 0,             XF86XK_AudioRaiseVolume,  spawn,          SHCMD(vol_up_cmd) },
+	{ 0,             XF86XK_AudioLowerVolume,  spawn,          SHCMD(vol_down_cmd) },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY|ShiftMask,             XK_b,      toggleextrabar, {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
@@ -139,7 +139,6 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[2]} },
-	/* { MODKEY,                       XK_space,  setlayout,      {0} }, */
 	{ MODKEY,                       XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
@@ -148,32 +147,6 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_3,                      2)
 	TAGKEYS(                        XK_4,                      3)
 	TAGKEYS(                        XK_5,                      4)
-	/* TAGKEYS(                        XK_6,                      5) */
-	/* TAGKEYS(                        XK_7,                      6) */
-	/* TAGKEYS(                        XK_8,                      7) */
-	/* TAGKEYS(                        XK_9,                      8) */
-	/* { MODKEY,                       XK_comma,  focusmon,       {.i = -1 } }, */
-	/* { MODKEY,                       XK_period, focusmon,       {.i = +1 } }, */
-	/* { MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } }, */
-	/* { MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } }, */
-	/* { MODKEY|ShiftMask,             XK_h,      setcfact,       {.f = +0.25} }, */
-	/* { MODKEY|ShiftMask,             XK_l,      setcfact,       {.f = -0.25} }, */
-	/* { MODKEY|ShiftMask,             XK_o,      setcfact,       {.f =  0.00} }, */
-	/* { MODKEY|Mod4Mask,              XK_u,      incrgaps,       {.i = +1 } }, */
-	/* { MODKEY|Mod4Mask|ShiftMask,    XK_u,      incrgaps,       {.i = -1 } }, */
-	/* { MODKEY|Mod4Mask,              XK_i,      incrigaps,      {.i = +1 } }, */
-	/* { MODKEY|Mod4Mask|ShiftMask,    XK_i,      incrigaps,      {.i = -1 } }, */
-	/* { MODKEY|Mod4Mask,              XK_o,      incrogaps,      {.i = +1 } }, */
-	/* { MODKEY|Mod4Mask|ShiftMask,    XK_o,      incrogaps,      {.i = -1 } }, */
-	/* { MODKEY|Mod4Mask,              XK_6,      incrihgaps,     {.i = +1 } }, */
-	/* { MODKEY|Mod4Mask|ShiftMask,    XK_6,      incrihgaps,     {.i = -1 } }, */
-	/* { MODKEY|Mod4Mask,              XK_7,      incrivgaps,     {.i = +1 } }, */
-	/* { MODKEY|Mod4Mask|ShiftMask,    XK_7,      incrivgaps,     {.i = -1 } }, */
-	/* { MODKEY|Mod4Mask,              XK_8,      incrohgaps,     {.i = +1 } }, */
-	/* { MODKEY|Mod4Mask|ShiftMask,    XK_8,      incrohgaps,     {.i = -1 } }, */
-	/* { MODKEY|Mod4Mask,              XK_9,      incrovgaps,     {.i = +1 } }, */
-	/* { MODKEY|Mod4Mask|ShiftMask,    XK_9,      incrovgaps,     {.i = -1 } }, */
-	/* { MODKEY|Mod4Mask|ShiftMask,    XK_0,      defaultgaps,    {0} }, */
 };
 
 /* button definitions */
@@ -183,10 +156,10 @@ static const Button buttons[] = {
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
-	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
-	{ ClkExBarLeftStatus,   0,              Button2,        spawn,          {.v = termcmd } },
-	{ ClkExBarMiddle,       0,              Button2,        spawn,          {.v = termcmd } },
-	{ ClkExBarRightStatus,  0,              Button2,        spawn,          {.v = termcmd } },
+	{ ClkStatusText,        0,              Button2,        spawn,          SHCMD(term_cmd) },
+	{ ClkExBarLeftStatus,   0,              Button2,        spawn,          SHCMD(term_cmd) },
+	{ ClkExBarMiddle,       0,              Button2,        spawn,          SHCMD(term_cmd) },
+	{ ClkExBarRightStatus,  0,              Button2,        spawn,          SHCMD(term_cmd) },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
